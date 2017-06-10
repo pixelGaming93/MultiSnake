@@ -2,6 +2,8 @@ package Snake;
 
 import java.awt.Rectangle;
 
+import GameLogic.GameLoop;
+
 public class SnakeComponent {
 	
 	protected int posX;
@@ -13,11 +15,31 @@ public class SnakeComponent {
 	protected String direction;
 	protected String nextDirection;
 	
-	public void move(){
-		if(direction.equals(Direction.UP)) posY -= speed;
-		if(direction.equals(Direction.DOWN)) posY += speed;
-		if(direction.equals(Direction.RIGHT)) posX += speed;
-		if(direction.equals(Direction.LEFT)) posX -= speed;
+	public void move(int width, int height){
+		if(direction.equals(Direction.UP))
+			if(posY - speed > 0){
+				posY -= speed;
+			}else{
+				GameLoop.setIsWin(true);
+			}	
+		if(direction.equals(Direction.DOWN)) 
+			if(posY + speed < height){
+				posY += speed;
+			}else{
+				GameLoop.setIsWin(true);
+			}
+		if(direction.equals(Direction.RIGHT)) 
+			if(posX + speed < width){
+				posX += speed;
+			}else{
+				GameLoop.setIsWin(true);
+			}
+		if(direction.equals(Direction.LEFT)) 
+			if(posX - speed > 0){
+				posX -= speed;
+			}else{
+				GameLoop.setIsWin(true);
+			}
 	}
 	
 	public void goUP(){

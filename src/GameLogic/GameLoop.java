@@ -1,7 +1,5 @@
 package GameLogic;
 
-import java.awt.Rectangle;
-
 import GUI.GamePanel;
 import GUI.SPanel;
 import Player.Player;
@@ -11,7 +9,7 @@ import Snake.SnakeHead;
 
 public class GameLoop implements Runnable{
 	
-	protected boolean isWin;
+	protected static boolean isWin;
 	protected GamePanel gp;
 	protected Player player;
 	protected Point point;
@@ -54,6 +52,7 @@ public class GameLoop implements Runnable{
 				frames = 0;
 			}
 		}
+		System.out.println("VERLOREN");
 	}
 
 	public void render(){
@@ -68,12 +67,12 @@ public class GameLoop implements Runnable{
 		if(gp.getKey().right) player.getSnakeHead().goRight();
 		if(gp.getKey().left) player.getSnakeHead().goLeft();
 
-		player.getSnakeHead().move();
+		player.getSnakeHead().move(gp.getWidth(), gp.getHeight());
 		String nd = player.getSnakeHead().getDirection();
 		for(SnakeComponent sc : player.getSnake()){
 			sc.setNextDirection(nd);
 			nd = sc.getDirection();
-			sc.move();
+			sc.move(gp.getWidth(), gp.getHeight());
 			sc.switchDirection();
 		}
 		
@@ -92,8 +91,8 @@ public class GameLoop implements Runnable{
 		}
 	}
 	
-	public void setIsWin(boolean isWin){
-		this.isWin = isWin;
+	public static void setIsWin(boolean Win){
+		isWin = Win;
 	}
 
 	private boolean collisionPoint(SnakeHead sh){
