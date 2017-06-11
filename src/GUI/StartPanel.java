@@ -51,7 +51,7 @@ public class StartPanel extends SPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gf.getContentPane().remove(0);
-				gf.setP(new SettingsPanel(300,300,sp));
+				gf.setP(new SettingsPanel(sp));
 			}
 		});
 		bPanel.add(settings);

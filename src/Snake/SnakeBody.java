@@ -7,6 +7,7 @@ public class SnakeBody extends SnakeComponent{
 		height = sc.height;
 		direction = sc.direction;
 		speed = sc.speed;
+		isPortal = sc.isPortal;		
 		if(direction.equals(Direction.RIGHT)){
 			posX = sc.posX - sc.width;
 			posY = sc.posY;

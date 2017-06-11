@@ -47,4 +47,11 @@ public class Player{
 	public void addScore(int score){
 		this.score += score;
 	}
+	
+	public void setPortalOn(boolean isPortal){
+		sh.setPortalOn(isPortal);
+		for(SnakeComponent sc : snake){
+			sc.setPortalOn(isPortal);
+		}
+	}
 }
