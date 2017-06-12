@@ -19,6 +19,7 @@ public class GameFrame extends JFrame{
 	private static final long serialVersionUID = -2363170020622765848L;
 	protected static String title = "Multiplayersnake";
 	protected static boolean isPortal = false;
+	protected static int gameSize;
 	protected int componentSize = 5;
 	protected SPanel sp;
 	protected SPanel p;
@@ -78,7 +79,6 @@ public class GameFrame extends JFrame{
 				getContentPane().remove(0);
 				p = new StartPanel(300,100);
 				add(p);
-				repaint();
 				align();
 			}
 		});
@@ -112,6 +112,10 @@ public class GameFrame extends JFrame{
 	
 	public void paintScore(){
 		sp.repaint();
+	}
+	
+	public void setGameSize(int gameSize){
+		this.gameSize = gameSize;
 	}
 	
 	public void align(){

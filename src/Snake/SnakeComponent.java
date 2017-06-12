@@ -17,7 +17,6 @@ public class SnakeComponent {
 	protected boolean isPortal = false;
 	
 	public void move(int width, int height){
-		System.out.println(isPortal);
 		if(direction.equals(Direction.UP)){
 			if(isPortal){
 				if(posY - speed < 0){
