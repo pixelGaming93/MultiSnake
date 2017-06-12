@@ -19,7 +19,7 @@ public class GameFrame extends JFrame{
 	private static final long serialVersionUID = -2363170020622765848L;
 	protected static String title = "Multiplayersnake";
 	protected static boolean isPortal = false;
-	protected static int gameSize;
+	protected static int gameSize = 60;
 	protected int componentSize = 5;
 	protected SPanel sp;
 	protected SPanel p;

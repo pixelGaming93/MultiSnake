@@ -4,6 +4,7 @@ import GUI.GamePanel;
 import GUI.SPanel;
 import Player.Player;
 import Points.Point;
+import Snake.Direction;
 import Snake.SnakeComponent;
 import Snake.SnakeHead;
 
@@ -62,10 +63,10 @@ public class GameLoop implements Runnable{
 	
 	public void update(){
 		gp.getKey().update();
-		if(gp.getKey().up) player.getSnakeHead().goUP();
-		if(gp.getKey().down) player.getSnakeHead().goDown();
-		if(gp.getKey().right) player.getSnakeHead().goRight();
-		if(gp.getKey().left) player.getSnakeHead().goLeft();
+		if(gp.getKey().up && !player.getSnakeHead().getDirection().equals(Direction.DOWN)) player.getSnakeHead().goUP();
+		if(gp.getKey().down && !player.getSnakeHead().getDirection().equals(Direction.UP)) player.getSnakeHead().goDown();
+		if(gp.getKey().right && !player.getSnakeHead().getDirection().equals(Direction.LEFT)) player.getSnakeHead().goRight();
+		if(gp.getKey().left && !player.getSnakeHead().getDirection().equals(Direction.RIGHT)) player.getSnakeHead().goLeft();
 
 		player.getSnakeHead().move(gp.getWidth(), gp.getHeight());
 		String nd = player.getSnakeHead().getDirection();
