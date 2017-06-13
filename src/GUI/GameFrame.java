@@ -40,8 +40,8 @@ public class GameFrame extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	public synchronized void startGame(){
-		initialPlayer();
+	public synchronized void startGame(String name){
+		initialPlayer(name);
 		initialPoint();
 		
 		t = new Thread(gl = new GameLoop(p, p1, point));
@@ -52,8 +52,8 @@ public class GameFrame extends JFrame{
 		gl.setIsWin(true);
 	}
 	
-	public void initialPlayer(){
-		p1 = new Player(componentSize);
+	public void initialPlayer(String name){
+		p1 = new Player(componentSize, name);
 		p1.setPortalOn(isPortal);
 	}
 	

@@ -14,8 +14,8 @@ public class Player{
 	protected SnakeHead sh;
 	protected ArrayList<SnakeComponent> snake = new ArrayList<SnakeComponent>();
 	
-	public Player(int componentSize){
-		this.name = "Player 1";
+	public Player(int componentSize, String name){
+		this.name = name;
 		score = 0;
 		sh = new SnakeHead(componentSize);
 		snake.add(new SnakeBody(sh));
@@ -38,6 +38,10 @@ public class Player{
 	
 	public long getScore(){
 		return score;
+	}
+	
+	public void setName(String name){
+		this.name = name;
 	}
 	
 	public String getName(){

@@ -36,7 +36,11 @@ public class StartPanel extends SPanel{
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				startGame();
+				gf.getContentPane().remove(0);
+				gf.setP(new NicknamePanel(sp));
+				gf.add(gf.p);
+				gf.pack();
+//				startGame();
 			}
 		});
 		bPanel.add(start);
@@ -62,7 +66,7 @@ public class StartPanel extends SPanel{
 		
 	}
 	
-	public void startGame(){
+	public void startGame(String name){
 		gf.getContentPane().remove(0);
 		gf.setLayout(new BorderLayout());
 		System.out.println("GridSize: " + gf.gameSize);
@@ -72,7 +76,11 @@ public class StartPanel extends SPanel{
 		gf.add(gf.sp,BorderLayout.NORTH);
 		gf.setP(new GamePanel(gf.gameSize ,sp,gf.componentSize));
 		gf.add(gf.p,BorderLayout.CENTER);
-			gf.startGame();
+		gf.startGame(name);
+	}
+	
+	public void startGame(){
+		startGame(gf.getPlayer().getName());
 	}
 	
 	public void fix(SPanel panel){
