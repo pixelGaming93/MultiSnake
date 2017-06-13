@@ -53,6 +53,7 @@ public class GameLoop implements Runnable{
 				frames = 0;
 			}
 		}
+		gp.showLostScreen();
 		System.out.println("VERLOREN");
 	}
 

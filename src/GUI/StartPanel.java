@@ -36,16 +36,7 @@ public class StartPanel extends SPanel{
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gf.getContentPane().remove(0);
-				gf.setLayout(new BorderLayout());
-				System.out.println("GridSize: " + gf.gameSize);
-				System.out.println("ComponentSize: " + gf.componentSize);
-				System.out.println(gf.gameSize * gf.componentSize);
-				gf.setSP(new ScorePanel(gf.gameSize,sp,gf.componentSize));
-				gf.add(gf.sp,BorderLayout.NORTH);
-				gf.setP(new GamePanel(gf.gameSize ,sp,gf.componentSize));
-				gf.add(gf.p,BorderLayout.CENTER);
- 				gf.startGame();
+				startGame();
 			}
 		});
 		bPanel.add(start);
@@ -69,6 +60,19 @@ public class StartPanel extends SPanel{
 		bPanel.add(cancel);
 		add(bPanel, BorderLayout.CENTER);
 		
+	}
+	
+	public void startGame(){
+		gf.getContentPane().remove(0);
+		gf.setLayout(new BorderLayout());
+		System.out.println("GridSize: " + gf.gameSize);
+		System.out.println("ComponentSize: " + gf.componentSize);
+		System.out.println(gf.gameSize * gf.componentSize);
+		gf.setSP(new ScorePanel(gf.gameSize,sp,gf.componentSize));
+		gf.add(gf.sp,BorderLayout.NORTH);
+		gf.setP(new GamePanel(gf.gameSize ,sp,gf.componentSize));
+		gf.add(gf.p,BorderLayout.CENTER);
+			gf.startGame();
 	}
 	
 	public void fix(SPanel panel){

@@ -49,6 +49,14 @@ public class GamePanel extends SPanel{
 		sp.gf.setTitle(sp.gf.title + title);
 	}
 	
+	public void showLostScreen(){
+		sp.gf.getContentPane().remove(0);
+		sp.gf.getContentPane().remove(0);
+		SPanel lp = new LostPanel(WIDTH,HEIGHT,sp);
+		sp.gf.add(lp);
+		sp.gf.align();
+	}
+	
 	public Keyboard getKey(){
 		return key;
 	}
