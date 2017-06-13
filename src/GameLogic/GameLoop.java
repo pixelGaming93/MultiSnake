@@ -54,7 +54,6 @@ public class GameLoop implements Runnable{
 			}
 		}
 		gp.showLostScreen();
-		System.out.println("VERLOREN");
 	}
 
 	public void render(){
@@ -78,6 +77,9 @@ public class GameLoop implements Runnable{
 			sc.switchDirection();
 		}
 		
+		if(player.getScore()%10 == 0){
+			gameSpeed += 5;
+		}
 		
 		
 //		Collison

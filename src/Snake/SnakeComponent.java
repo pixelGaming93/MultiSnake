@@ -19,13 +19,13 @@ public class SnakeComponent {
 	public void move(int width, int height){
 		if(direction.equals(Direction.UP)){
 			if(isPortal){
-				if(posY - speed < 0){
+				if(posY - speed <= 0){
 					posY = height;
 				}else{
 					posY -= speed;
 				}
 			}else{
-				if(posY - speed > 0){
+				if(posY - speed >= 0){
 					posY -= speed;
 				}else{
 					GameLoop.setIsWin(true);
@@ -34,13 +34,13 @@ public class SnakeComponent {
 		}
 		if(direction.equals(Direction.DOWN)){
 			if(isPortal){
-				if(posY + speed > height){
+				if(posY + speed >= height){
 					posY = 0;
 				}else{
 					posY += speed;
 				}
 			}else{
-				if(posY + speed < height){
+				if(posY + speed <= height){
 					posY += speed;
 				}else{
 					GameLoop.setIsWin(true);
@@ -49,13 +49,13 @@ public class SnakeComponent {
 		}
 		if(direction.equals(Direction.RIGHT)){
 			if(isPortal){
-				if(posX + speed > width){
+				if(posX + speed >= width){
 					posX = 0;
 				}else{
 					posX += speed;
 				}
 			}else{
-				if(posX + speed < width){
+				if(posX + speed <= width){
 					posX += speed;
 				}else{
 					GameLoop.setIsWin(true);
@@ -64,13 +64,13 @@ public class SnakeComponent {
 		}
 		if(direction.equals(Direction.LEFT)){
 			if(isPortal){
-				if(posX - speed < 0){
+				if(posX - speed <= 0){
 					posX = width;
 				}else{
 					posX -= speed;
 				}
 			}else{
-				if(posX - speed > 0){
+				if(posX - speed >= 0){
 					posX -= speed;
 				}else{
 					GameLoop.setIsWin(true);
