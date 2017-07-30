@@ -2,68 +2,162 @@ package GUI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import GameLogic.GameLoop;
-import Input.Keyboard;
+import GameLogic.GameLoopAbstract;
+import GameLogic.GameLoopClient;
+import GameLogic.GameLoopServer;
+import Player.ClientPlayer;
 import Player.Player;
+import Player.ServerPlayer;
 import Points.NormalPoint;
 import Points.Point;
+import Snake.Direction;
 
 public class GameFrame extends JFrame{
 	
-	private static final long serialVersionUID = -2363170020622765848L;
-	protected static String title = "Multiplayersnake";
-	protected static boolean isPortal = false;
-	protected static int gameSize = 60;
-	protected int componentSize = 5;
-	protected SPanel sp;
-	protected SPanel p;
-	protected Player p1;
-	protected Point point;
-	protected Thread t;
-	protected GameLoop gl;
-	protected Keyboard key;
+	public static final long serialVersionUID = -2363170020622765848L;
 	
-	public GameFrame(int width, int height){
+	/// - Variables - ///
+	public String title = "Multiplayersnake";
+	public int componentSize = 5;
+	public Point point;
+	public Thread t;
+	public GameLoopAbstract gl;
+
+	// - Settings - // 
+	public boolean isPortal = false;
+	public int gameSize = 60;
+	
+	// - Player - //
+	public ServerPlayer serverPlayer;
+	public ClientPlayer clientPlayer;
+	
+	// - Server - //
+	public int portAdd;
+	public String ipAdd;
+	
+	// - Panel - // 
+	public SPanel settingPanel;
+	public SPanel storePanel;
+	
+	/// - Constructor - ///
+	public GameFrame(){
 		JMenuBar jmb = new JMenuBar();
 		setJMenuBar(jmb);
 		addSubmenu(jmb);
 		
-		p = new StartPanel(300,100,this);
-		add(p);
+		storePanel = new StartPanel(300,200,this);
+		add(storePanel);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
+	/// - Methods - ///
+	
 	public synchronized void startGame(String name){
-		initialPlayer(name);
+		/*
+		 * Startet das Spiel 
+		 * Initialisiert einen Spieler und einen Punkt
+		 * erzeugt einen neuen Thread
+		 */
+		initialServerPlayer(name);
 		initialPoint();
 		
-		t = new Thread(gl = new GameLoop(p, p1, point));
+		t = new Thread(gl = new GameLoopServer(storePanel, serverPlayer, point, this));
+		t.start();
+	}
+	
+	public synchronized void startMultiGame(String name){
+		/*
+		 * Startet ein Multiplayerspiel
+		 * Initialisiert einen neuen Spieler
+		 * Startet einen neuen Thread
+		 */
+		initialServerPlayer(name);
+		initialClientOpponent("");
+		initialPoint(250, 250);
+		t = new Thread(gl = new GameLoopServer(storePanel, serverPlayer, point, this));
+		t.start();
+	}
+	
+	public void connectAndStart(String name){
+		/*
+		 * ???
+		 */
+		initialClientPlayer(name);
+		initialServerOpponent("");
+		initialPoint(250,250);
+		setClientPlayer(name);
+		t = new Thread(gl = new GameLoopClient(storePanel, clientPlayer, point, this));
 		t.start();
 	}
 	
 	public synchronized void stopGame(){
+		/*
+		 * Stopt das Spiel
+		 */
 		gl.setIsWin(true);
 	}
 	
-	public void initialPlayer(String name){
-		p1 = new Player(componentSize, name);
-		p1.setPortalOn(isPortal);
+	public void paintSettingPanel(){
+		/*
+		 * Malt das OptionsPanel neu
+		 */
+		settingPanel.repaint();
+	}
+	
+	public void align(){
+		/*
+		 * Setzt das Fenster zurück.
+		 * Malt es neu, damit keine Fehler auftreten.
+		 */
+		pack();
+		setLocationRelativeTo(null);
+		repaint();
+	}
+	
+	// - Initial - //
+	public void initialServerPlayer(String name){
+		serverPlayer = new ServerPlayer(componentSize, name);
+		serverPlayer.setPortalOn(isPortal);
+	}
+	
+	public void initialClientPlayer(String name){
+		clientPlayer = new ClientPlayer(componentSize, name, 240, 240, Direction.LEFT);
+		clientPlayer.setPortalOn(isPortal);
+	}
+	
+	public void initialServerOpponent(String name){
+		serverPlayer = new ServerPlayer(componentSize, name);
+		serverPlayer.setPortalOn(isPortal);
+	}
+	
+	public void initialClientOpponent(String name){
+		clientPlayer = new ClientPlayer(componentSize, name, 240, 240, Direction.LEFT);
+		clientPlayer.setPortalOn(isPortal);
 	}
 	
 	public void initialPoint(){
-		point = new NormalPoint(((int)(Math.random()*((GamePanel)p).getGridSize()))*componentSize,((int)(Math.random()*((GamePanel)p).getGridSize()))*componentSize);
+		point = new NormalPoint(((int)(Math.random()*((GamePanel)storePanel).getGridSize()))*componentSize,((int)(Math.random()*((GamePanel)storePanel).getGridSize()))*componentSize);
 	}
 	
+	public void initialPoint(int x, int y) {
+		point = new NormalPoint(x, y);
+	}
+	
+	// - create Frame - //
 	public void addSubmenu(JMenuBar jmb){
 		JMenu JMOption = new JMenu("Optionen");
 		jmb.add(JMOption);
+		//-----
 		JMenuItem JMIClose = new JMenuItem("Beenden");
 		JMIClose.addActionListener(new ActionListener() {
 			@Override
@@ -71,57 +165,107 @@ public class GameFrame extends JFrame{
 				System.exit(0);
 			}
 		});
+		JMOption.add(JMIClose);
+		//-----
 		JMenuItem JMIBack = new JMenuItem("Zurück");
 		JMIBack.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				stopGame();
 				getContentPane().remove(0);
-				p = new StartPanel(300,100);
-				add(p);
+				storePanel = new StartPanel(300,100);
+				add(storePanel);
 				align();
 			}
 		});
-		JMOption.add(JMIClose);
 		JMOption.add(JMIBack);
+		//-----
 	}
 	
-	public void setSP(SPanel panel){
-		this.sp = panel;
-	}
 
-	public void setP(SPanel panel){
-		this.p = panel;
+	/// - Getter & Setter - ///
+	public String getTitle(){
+		return title;
 	}
 	
-	public Player getPlayer(){
-		return p1;
+	public void setTitle(String title){
+		this.title = title;
 	}
 	
 	public Point getPoint(){
 		return point;
 	}
 	
-	public static void setPortalOn(boolean portal){
-		isPortal = portal;
+	public void setPoint(Point point){
+		this.point = point;
 	}
 	
-	public static boolean getPortalOn(){
-		return isPortal;
+	public int getGameSize(){
+		return gameSize;
 	}
 	
-	public void paintScore(){
-		sp.repaint();
+	public int getComponentSize(){
+		return componentSize;
 	}
 	
+	// - Panel - // 
+	public void setStorePanel(SPanel storePanel){
+		this.storePanel = storePanel;
+	}
+	
+	public SPanel getStorePanel(){
+		return storePanel;
+	}
+
+	public void setSettingPanel(SPanel settingPanel){
+		this.settingPanel = settingPanel;
+	}
+	
+	public SPanel getSettingPanel(){
+		return settingPanel;
+	}
+	
+	// - Settings - // 
 	public void setGameSize(int gameSize){
 		this.gameSize = gameSize;
 	}
-	
-	public void align(){
-		pack();
-		setLocationRelativeTo(null);
-		repaint();
+
+	public void setPortalOn(boolean portal){
+		isPortal = portal;
 	}
+
+	public boolean getPortalOn(){
+		return isPortal;
+	}
+	
+	// - Player - // 
+	public Player getServerPlayer(){
+		return serverPlayer;
+	}
+	
+	public Player getClientPlayer(){
+		return clientPlayer;
+	}
+
+	public int getPortAdd(){
+		return portAdd;
+	}
+	
+	public void setPortAdd(int portAdd){
+		this.portAdd = portAdd;
+	}
+	
+	public String getIpAdd(){
+		return ipAdd;
+	}
+	
+	public void setIpAdd(String ipAdd){
+		this.ipAdd = ipAdd;
+	}
+	
+	public void setClientPlayer(String name){
+		clientPlayer.setName(name);
+	}
+	
 	
 }

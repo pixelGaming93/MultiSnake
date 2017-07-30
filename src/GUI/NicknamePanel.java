@@ -8,10 +8,17 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+/*
+ * Das Panel in das der Nickname geschrieben wird
+ */
 public class NicknamePanel extends SPanel{
 	
+	/// - Variables - ///
+	private static final long serialVersionUID = 1L;
 	protected StartPanel sp;
 	
+	/// - Methods - ///
+	// - Constructor - //
 	public NicknamePanel(StartPanel sp){
 		this.sp = sp;
 		setLayout(new BorderLayout());

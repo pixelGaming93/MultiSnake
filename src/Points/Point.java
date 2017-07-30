@@ -1,15 +1,26 @@
 package Points;
 
 import java.awt.Rectangle;
+import java.io.Serializable;
 
-public class Point {
+public class Point implements Serializable{
 	
+	
+	/// - Variables - ///
 	protected int posX;
 	protected int posY;
 	protected int width;
 	protected int height;
 	protected int score;
 	
+	/// - Methods - ///
+	
+	// - Constructor - // 
+	public Point() {
+		
+	}
+	
+	// - Getter & Setter - //
 	public int getPosX(){
 		return posX;
 	}

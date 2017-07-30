@@ -1,29 +1,58 @@
 package Player;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import Snake.SnakeBody;
 import Snake.SnakeComponent;
 import Snake.SnakeHead;
 
-public class Player{
+public class Player implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
 	protected String name;
 	protected long score;
 	protected SnakeHead sh;
 	protected ArrayList<SnakeComponent> snake = new ArrayList<SnakeComponent>();
+	
+	/// - Methods - ///
+	
+	// - Constructor - //
+	
+	public Player() {
+		
+	}
 	
 	public Player(int componentSize, String name){
 		this.name = name;
 		score = 0;
 		sh = new SnakeHead(componentSize);
 		snake.add(new SnakeBody(sh));
+		/*
+		 * Standardgröße der Schlange
+		 * 1 Kopf + 4 Körperteile
+		 */
 		for(int i = 0; i < 4; i++){
 			snake.add(new SnakeBody(snake.get(i)));
 		}
 	}
 	
+	public Player(int componentSize, String name, int x, int y, String direction) {
+		this.name = name;
+		score = 0;
+		sh = new SnakeHead(componentSize, x, y, direction);
+		snake.add(new SnakeBody(sh));
+		/*
+		 * Standardgröße der Schlange
+		 * 1 Kopf + 4 Körperteile
+		 */
+		for(int i = 0; i < 4; i++){
+			snake.add(new SnakeBody(snake.get(i)));
+		}
+	}
+	
+	// - Getter & Setter - //
 	public SnakeHead getSnakeHead(){
 		return sh;
 	}
@@ -57,5 +86,11 @@ public class Player{
 		for(SnakeComponent sc : snake){
 			sc.setPortalOn(isPortal);
 		}
+	}
+	
+	
+	@Override
+	public String toString() {
+		return name + " - " + score + " - " + sh.getX() + " - " + sh.getY();
 	}
 }

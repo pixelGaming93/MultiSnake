@@ -10,14 +10,19 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+/*
+ * Das Panel listet verschiedene Einstellungen auf, die ein Spieler vor dem Starten ändern kann
+ */
 public class SettingsPanel extends SPanel{
 	
+	/// - Variables - ///
 	private static final long serialVersionUID = -7198251507030778750L;
 	protected int WIDTH;
 	protected int HEIGHT;
 	protected StartPanel sp;
 	
-	
+	/// - Methods - ///
+	// - Constructor - //
 	public SettingsPanel(StartPanel sp){
 		this.sp = sp;
 		setLayout(new GridLayout(10, 1));
@@ -25,12 +30,12 @@ public class SettingsPanel extends SPanel{
 		portal.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(sp.gf.getPortalOn()){
+				if(StartPanel.gf.getPortalOn()){
 					portal.setText("Portal einschalten");
-					sp.gf.setPortalOn(false);
+					StartPanel.gf.setPortalOn(false);
 				}else{
 					portal.setText("Portal ausschalten");
-					sp.gf.setPortalOn(true);
+					StartPanel.gf.setPortalOn(true);
 				}
 			}
 		});
@@ -41,21 +46,21 @@ public class SettingsPanel extends SPanel{
 		small.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sp.gf.setGameSize(40);
+				StartPanel.gf.setGameSize(40);
 			}
 		});
 		JButton medium = new JButton("Mittleres Spielfeld");
 		medium.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sp.gf.setGameSize(60);
+				StartPanel.gf.setGameSize(60);
 			}
 		});
 		JButton large = new JButton("Großes Spielfeld");
 		large.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sp.gf.setGameSize(100);
+				StartPanel.gf.setGameSize(100);
 			}
 		});
 		gSP.add(small, BorderLayout.WEST);

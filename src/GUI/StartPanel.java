@@ -5,55 +5,97 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
  
-
+/*
+ * Erstellt das Panel für das Start-Menü
+ * H
+ */
 public class StartPanel extends SPanel{
 
 	private static final long serialVersionUID = 5890557562020940174L;
+	
+	/// - Variables - ///
 	protected int WIDTH;
 	protected int HEIGHT;
 	protected static GameFrame gf;
-	protected StartPanel sp;
+	private boolean isMultiPlayer = false;
 	
+	/// - Methods - ///
+	// - Constructor - //
 	public StartPanel(int width, int height){
 		this(width,height,gf);
 	}
 	
+	// - Constructor - //
 	public StartPanel(int WIDTH, int HEIGHT, GameFrame gframe){
 		this.WIDTH = WIDTH;
 		this.HEIGHT = HEIGHT;
 		gf = gframe;
-		sp = this;
 		
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setLayout(new BorderLayout());
+		createStartPanel();
+		gf.setResizable(false);
+		
+	}
+	
+	public void createStartPanel(){
 		JPanel bPanel = new JPanel();
-		bPanel.setLayout(new GridLayout(3, 1));
-		JButton start = new JButton("Start");
-		start.addActionListener(new ActionListener() {
+		bPanel.setLayout(new GridLayout(5, 1));
+		// Startet einen Server und wartet auf einen Client um das Multiplayer-Spiel zu spielen
+		JButton serverStart = new JButton("Server starten");
+		serverStart.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				isMultiPlayer = true;
+				gf.getContentPane().remove(0);
+				gf.setStorePanel(new ServerStartPanel(gf,StartPanel.this));
+				gf.add(gf.getStorePanel());
+				gf.pack();
+			}
+		});
+		bPanel.add(serverStart);
+		//Versucht einen Server zu finden um das Multiplayer-SPiel zu spielen
+		JButton joinServer = new JButton("Server beitreten");
+		joinServer.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				isMultiPlayer = true;
+				gf.getContentPane().remove(0);
+				gf.setStorePanel(new ServerConnectPanel(gf,StartPanel.this));
+				gf.add(gf.getStorePanel());
+				gf.pack();
+			}
+		});
+		bPanel.add(joinServer);
+		//Startet das Spiel als Singleplayer
+		JButton singelPlayer = new JButton("Singleplayer");
+		singelPlayer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gf.getContentPane().remove(0);
-				gf.setP(new NicknamePanel(sp));
-				gf.add(gf.p);
+				gf.setStorePanel(new NicknamePanel(StartPanel.this));
+				gf.add(gf.getStorePanel());
 				gf.pack();
-//				startGame();
 			}
 		});
-		bPanel.add(start);
+		bPanel.add(singelPlayer);
+		//Öffnet das Option's-Fenster um Einstellungen zu ändern
 		JButton settings = new JButton("Spiel-Optionen");
 		settings.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gf.getContentPane().remove(0);
-				gf.setP(new SettingsPanel(sp));
+				gf.setStorePanel(new SettingsPanel(StartPanel.this));
 				gf.pack();
 			}
 		});
 		bPanel.add(settings);
+		//Schließt das Menü
 		JButton cancel = new JButton("Spiel beenden");
 		cancel.addActionListener(new ActionListener() {
 			@Override
@@ -62,30 +104,69 @@ public class StartPanel extends SPanel{
 			}
 		});
 		bPanel.add(cancel);
+		//-----
 		add(bPanel, BorderLayout.CENTER);
-		
 	}
 	
 	public void startGame(String name){
-		gf.getContentPane().remove(0);
-		gf.setLayout(new BorderLayout());
-		System.out.println("GridSize: " + gf.gameSize);
-		System.out.println("ComponentSize: " + gf.componentSize);
-		System.out.println(gf.gameSize * gf.componentSize);
-		gf.setSP(new ScorePanel(gf.gameSize,sp,gf.componentSize));
-		gf.add(gf.sp,BorderLayout.NORTH);
-		gf.setP(new GamePanel(gf.gameSize ,sp,gf.componentSize));
-		gf.add(gf.p,BorderLayout.CENTER);
+		/*
+		 * Nimmt Grundeinstellungen vor und startet dann den Thread für das Spiel
+		 */
+		prepareGame();
 		gf.startGame(name);
 	}
 	
 	public void startGame(){
-		startGame(gf.getPlayer().getName());
+		/*
+		 * Startet das Spiel ohne vorher Grundeinstellungen zu ändern. Wichtig um ein Verlorenes Spiel neu zu starten.
+		 */
+		startGame(gf.getServerPlayer().getName());
+	}
+
+	public void waitForOpponent(String name){
+		/*
+		 * Wartet auf einen anderen Spieler //Server
+		 */
+		prepareGame();
+		gf.startMultiGame(name);
+	}	
+	
+	public void connectToServer(String name){
+		/*
+		 * Versucht eine Verbindung herzustellen //Client 
+		 */
+		prepareGame();
+		gf.connectAndStart(name);
+	}
+	
+	public void prepareGame(){
+		/*
+		 * Grundeinstellungen
+		 */
+		gf.getContentPane().remove(0);
+		gf.setLayout(new BorderLayout());
+		gf.setSettingPanel(new ScorePanel(gf.getGameSize(),this,gf.getComponentSize()));
+		gf.add(gf.getSettingPanel(),BorderLayout.NORTH);
+		gf.setStorePanel(new GamePanel(gf.getGameSize() ,this,gf.getComponentSize(),gf));
+		gf.add(gf.getStorePanel(),BorderLayout.CENTER);
 	}
 	
 	public void fix(SPanel panel){
+		/*
+		 * Hilft dabei die GUI anständig darzustellen
+		 */
 		gf.add(panel);
+		gf.setResizable(false);
 		gf.align();
+	}
+	
+	// - Getter & Setter - //
+	public boolean getIsMultiPlayer(){
+		return isMultiPlayer;
+	}
+	
+	public void setIsMultiPlayer(boolean isMultiPlayer){
+		this.isMultiPlayer = isMultiPlayer;
 	}
 
 }

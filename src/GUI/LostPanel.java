@@ -10,16 +10,21 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/*
+ * Das Panel dass erscheint, wenn ein Spiel Verloren wurde
+ */
 public class LostPanel extends SPanel{
 	
+	/// - Variables - ///
+	private static final long serialVersionUID = 1L;
 	protected int WIDTH;
 	protected int HEIGHT;
-	protected StartPanel sp;
 	
+	/// - Methods - ///
+	// - Constructor - // 
 	public LostPanel(int WIDTH, int HEIGHT, StartPanel sp){
 		this.WIDTH = WIDTH;
 		this.HEIGHT = HEIGHT;
-		this.sp = sp;
 		setPreferredSize(new Dimension(WIDTH,HEIGHT));
 		setLayout(new BorderLayout());
 		JPanel bp = new JPanel();
@@ -36,10 +41,10 @@ public class LostPanel extends SPanel{
 		back.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sp.gf.getContentPane().remove(0);
-				sp.gf.p = new StartPanel(300,100);
-				sp.gf.add(sp.gf.p);
-				sp.gf.align();
+				StartPanel.gf.getContentPane().remove(0);
+				StartPanel.gf.setStorePanel(new StartPanel(300,100));
+				StartPanel.gf.add(StartPanel.gf.getStorePanel());
+				StartPanel.gf.align();
 			}
 		});
 		bp.setLayout(new GridLayout(1, 2));
