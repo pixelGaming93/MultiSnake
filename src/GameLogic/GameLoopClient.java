@@ -37,7 +37,9 @@ public class GameLoopClient extends GameLoopAbstract{
 		long timer = System.currentTimeMillis();
 		final double ns = 1000000000.0 / gameSpeed;
 		double delta = 0;
+		@SuppressWarnings("unused")
 		int frames = 0;
+		@SuppressWarnings("unused")
 		int updates = 0;
 		
 		try{
@@ -91,7 +93,6 @@ public class GameLoopClient extends GameLoopAbstract{
 				
 				if(System.currentTimeMillis() - timer > 1000){
 					timer += 1000;
-//					gp.setTitle(gf.getTitle() + " | " + updates + " ups, " + frames + " fps");
 					updates = 0;
 					frames = 0;
 					

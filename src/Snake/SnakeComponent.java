@@ -3,13 +3,15 @@ package Snake;
 import java.awt.Rectangle;
 import java.io.Serializable;
 
-import GameLogic.GameLoopAbstract;
-
 /*
  * Eine Oberklasse für sowohl Körper als auch Kopf der Schlange.
  */
 public abstract class SnakeComponent implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/// - Variables - /// 
 	public int posX;
 	public int posY;

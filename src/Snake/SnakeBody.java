@@ -9,6 +9,11 @@ public class SnakeBody extends SnakeComponent implements Serializable{
 	
 	/// - Methods - /// 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// - Constructor - //
 	public SnakeBody(SnakeComponent sc){
 		width = sc.width;

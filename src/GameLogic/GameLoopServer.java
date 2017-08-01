@@ -10,7 +10,6 @@ import GUI.GamePanel;
 import GUI.SPanel;
 import NetworkObjects.PlayerPointDTO;
 import Player.Player;
-import Points.NormalPoint;
 import Points.Point;
 import Snake.Direction;
 import Snake.SnakeComponent;
@@ -36,7 +35,9 @@ public class GameLoopServer extends GameLoopAbstract{
 	public void run() {
 		final double ns = 1000000000.0 / gameSpeed;
 		double delta = 0;
+		@SuppressWarnings("unused")
 		int frames = 0;
+		@SuppressWarnings("unused")
 		int updates = 0;
 		
 		try{

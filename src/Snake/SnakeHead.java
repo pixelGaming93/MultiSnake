@@ -8,6 +8,11 @@ import java.io.Serializable;
 public class SnakeHead extends SnakeComponent implements Serializable{
 	/// - Methods - ///
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// - Constructor - //
 	public SnakeHead(int componentSize){
 		posX = 40;
@@ -35,7 +40,6 @@ public class SnakeHead extends SnakeComponent implements Serializable{
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return posX + " - " + posY + " - " + direction;
 	}
 }

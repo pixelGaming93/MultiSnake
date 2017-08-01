@@ -11,6 +11,10 @@ public class Direction implements Serializable{
 	 * Bestimmt die Richtung der Schlange.
 	 */
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/// - Variables - ///
 	public static String RIGHT = "RIGHT";
 	public static String LEFT = "LEFT";

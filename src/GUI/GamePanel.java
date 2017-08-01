@@ -6,8 +6,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 import Input.Keyboard;
-import NetworkObjects.ExternalIP;
-import NetworkObjects.OwnIPAddress;
 import Points.Point;
 import Snake.SnakeComponent;
 import Snake.SnakeHead;

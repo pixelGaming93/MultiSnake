@@ -28,12 +28,10 @@ public class ServerStartPanel extends SPanel{
 		JLabel nick = new JLabel("Spielername: ");
 		add(nick);
 		JTextField input = new JTextField(15);
-//		JTextField input = new JTextField("Spieler 1");
 		add(input);
 		JLabel port = new JLabel("Port: ");
 		add(port);
 		JTextField input2 = new JTextField(4);
-//		JTextField input2 = new JTextField("2000");
 		add(input2);
 		JLabel freeLabel = new JLabel("");
 		add(freeLabel);

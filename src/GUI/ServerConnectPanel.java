@@ -3,7 +3,6 @@ package GUI;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -27,23 +26,19 @@ public class ServerConnectPanel extends SPanel{
 		setLayout(new GridLayout(3, 3));
 		JLabel nick = new JLabel("Spielername: ");
 		add(nick);
-//		JTextField input = new JTextField("Spieler 2");
 		JTextField input = new JTextField(15);
 		add(input);
 		JButton start = new JButton("Spiel beitreten");
 		add(start);
 		JLabel port = new JLabel("Port: ");
 		add(port);
-//		JTextField input2 = new JTextField("2000");
 		JTextField input2 = new JTextField(4);
 		add(input2);
 		JLabel freeLabel = new JLabel("");
 		add(freeLabel);
 		JLabel ip = new JLabel("IP-Adresse: ");
 		add(ip);
-		JTextField input3 = new JTextField("93.195.210.197");
-//		JTextField input3 = new JTextField("192.168.2.130");
-//		JTextField input3 = new JTextField(15);
+		JTextField input3 = new JTextField(15);
 		add(input3);
 		start.addActionListener(new ActionListener() {
 			@Override

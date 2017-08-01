@@ -8,6 +8,11 @@ public class NormalPoint extends Point implements Serializable{
 	
 	// - Constructor - //
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public NormalPoint() {
 		
 	}

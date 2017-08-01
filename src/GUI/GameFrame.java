@@ -2,7 +2,6 @@ package GUI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -12,7 +11,6 @@ import javax.swing.JMenuItem;
 import GameLogic.GameLoopAbstract;
 import GameLogic.GameLoopClient;
 import GameLogic.GameLoopServer;
-import NetworkObjects.ExternalIP;
 import NetworkObjects.OwnIPAddress;
 import Player.Player;
 import Points.NormalPoint;
@@ -105,7 +103,7 @@ public class GameFrame extends JFrame{
 		/*
 		 * Stopt das Spiel
 		 */
-		gl.setIsWin(true);
+		GameLoopAbstract.setIsWin(true);
 	}
 	
 	public void paintSettingPanel(){
