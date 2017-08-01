@@ -37,7 +37,7 @@ public abstract class SnakeComponent implements Serializable{
 		if(direction.equals(Direction.UP)){
 			
 			if(isPortal){
-				if(posY - speed <= 0){
+				if(posY - speed < 0){
 					
 					posY = height;
 					
@@ -47,20 +47,20 @@ public abstract class SnakeComponent implements Serializable{
 					
 				}
 			}else{
-				if(posY - speed >= 0){
+				if(posY - speed < 0){
 					
-					posY -= speed;
+					setIsWin(true);
 					
 				}else{
 					
-					setIsWin(true);
+					posY -= speed;
 					
 				}	
 			}
 		}
 		if(direction.equals(Direction.DOWN)){
 			if(isPortal){
-				if(posY + speed >= height){
+				if(posY + speed > height){
 					
 					posY = 0;
 					
@@ -70,20 +70,20 @@ public abstract class SnakeComponent implements Serializable{
 				
 				}
 			}else{
-				if(posY + speed <= height){
+				if(posY + speed > height){
 					
-					posY += speed;
+					setIsWin(true);
 
 				}else{
-				
-					setIsWin(true);
+					
+					posY += speed;
 				
 				}
 			}
 		}
 		if(direction.equals(Direction.RIGHT)){
 			if(isPortal){
-				if(posX + speed >= width){
+				if(posX + speed > width){
 				
 					posX = 0;
 			
@@ -93,20 +93,20 @@ public abstract class SnakeComponent implements Serializable{
 				
 				}
 			}else{
-				if(posX + speed <= width){
+				if(posX + speed > width){
 				
-					posX += speed;
+					setIsWin(true);
 				
 				}else{
 				
-					setIsWin(true);
+					posX += speed;
 				
 				}
 			}
 		}
 		if(direction.equals(Direction.LEFT)){
 			if(isPortal){
-				if(posX - speed <= 0){
+				if(posX - speed < 0){
 				
 					posX = width;
 				
@@ -116,13 +116,13 @@ public abstract class SnakeComponent implements Serializable{
 				
 				}
 			}else{
-				if(posX - speed >= 0){
+				if(posX - speed < 0){
 				
-					posX -= speed;
+					setIsWin(true);
 				
 				}else{
 					
-					setIsWin(true);
+					posX -= speed;
 					
 				}
 			}
