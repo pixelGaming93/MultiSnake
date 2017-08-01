@@ -8,8 +8,9 @@ import java.net.Socket;
 import GUI.GameFrame;
 import GUI.GamePanel;
 import GUI.SPanel;
-import Player.ClientPlayer;
+import NetworkObjects.PlayerPointDTO;
 import Player.Player;
+import Points.NormalPoint;
 import Points.Point;
 import Snake.Direction;
 import Snake.SnakeComponent;
@@ -25,7 +26,7 @@ public class GameLoopServer extends GameLoopAbstract{
 		isWin = false;
 		this.gp = (GamePanel)gp;
 		this.gf = gf;
-		this.serverPlayer = serverPlayer;
+//		this.serverPlayer = serverPlayer;
 		this.point = point;
 		gameSpeed = 15.0;
 	}
@@ -39,13 +40,30 @@ public class GameLoopServer extends GameLoopAbstract{
 		int updates = 0;
 		
 		try{
+			
 			server = new ServerSocket(gf.getPortAdd());
 			client = server.accept();
 			
 			
 			if(client.isConnected()){
+				ObjectInputStream inputDTO = new ObjectInputStream(client.getInputStream());
+				ObjectOutputStream outputDTO = new ObjectOutputStream(client.getOutputStream());
+				
+				PlayerPointDTO output = new PlayerPointDTO();
+				PlayerPointDTO input = new PlayerPointDTO();
+				
+				gf.clientPlayer = ((PlayerPointDTO)inputDTO.readObject()).player;
+				gf.clientPlayer.setPortalOn(gf.getPortalOn());
+				
+				output.player = gf.clientPlayer;
+				output.point = gf.point;
+				outputDTO.writeObject(output);
+				outputDTO.flush();
+				outputDTO.reset();
+				
 				long lastTime = System.nanoTime();
 				long timer = System.currentTimeMillis();
+				
 				while(!isWin){
 					long now = System.nanoTime();
 					delta += (now-lastTime) / ns;
@@ -56,29 +74,32 @@ public class GameLoopServer extends GameLoopAbstract{
 						updates++;
 						delta--;
 					}
-					// Streams
-					ObjectInputStream getObj = new ObjectInputStream(client.getInputStream());
-					clientPlayer = (ClientPlayer) getObj.readObject();
-					gf.clientPlayer = (ClientPlayer) clientPlayer;
-
-					ObjectOutputStream sendSPlayer = new ObjectOutputStream(client.getOutputStream());
-					sendSPlayer.writeObject(serverPlayer);
-					sendSPlayer.flush();
 					
-					ObjectOutputStream sendPoint = new ObjectOutputStream(client.getOutputStream());
-					sendPoint.writeObject(point);
-					sendPoint.flush();
+					// Streams
+					input = (PlayerPointDTO) inputDTO.readObject();
+					gf.clientPlayer = input.player;
+					
+					System.out.println("1. Ausgabe : "+ gf.serverPlayer.toString());
+					output.player = gf.serverPlayer;
+					output.point = gf.point;
+					
+					System.out.println("2. Ausgabe : " + output.player.toString());
+					outputDTO.writeObject(output);
+					outputDTO.flush();
+					outputDTO.reset();
 					
 					render();
 					frames++;
 					
 					if(System.currentTimeMillis() - timer > 1000){
 						timer += 1000;
-						gp.setTitle(gp.getTitle() + " | " + updates + " ups, " + frames + " fps");
+//						gp.setTitle(gf.getTitle() + " | " + updates + " ups, " + frames + " fps");
 						updates = 0;
 						frames = 0;
 					}
 				}
+				
+				//Wenn ein Spieler boolischen Variable false dann verloren und lost screen
 				gp.showLostScreen();
 			}
 		}catch(Exception e){
@@ -89,54 +110,52 @@ public class GameLoopServer extends GameLoopAbstract{
 	
 	@Override
 	public void move() {
-		if(gp.getKey().up && !serverPlayer.getSnakeHead().getDirection().equals(Direction.DOWN)) serverPlayer.getSnakeHead().goUP();
-		if(gp.getKey().down && !serverPlayer.getSnakeHead().getDirection().equals(Direction.UP)) serverPlayer.getSnakeHead().goDown();
-		if(gp.getKey().right && !serverPlayer.getSnakeHead().getDirection().equals(Direction.LEFT)) serverPlayer.getSnakeHead().goRight();
-		if(gp.getKey().left && !serverPlayer.getSnakeHead().getDirection().equals(Direction.RIGHT)) serverPlayer.getSnakeHead().goLeft();
+		if(gp.getKey().up && !gf.serverPlayer.getSnakeHead().getDirection().equals(Direction.DOWN)) gf.serverPlayer.getSnakeHead().goUP();
+		if(gp.getKey().down && !gf.serverPlayer.getSnakeHead().getDirection().equals(Direction.UP)) gf.serverPlayer.getSnakeHead().goDown();
+		if(gp.getKey().right && !gf.serverPlayer.getSnakeHead().getDirection().equals(Direction.LEFT)) gf.serverPlayer.getSnakeHead().goRight();
+		if(gp.getKey().left && !gf.serverPlayer.getSnakeHead().getDirection().equals(Direction.RIGHT)) gf.serverPlayer.getSnakeHead().goLeft();
 	}
 	
 	@Override
 	public void abstractUpdate() {
-		serverPlayer.getSnakeHead().move(gp.getWidth(), gp.getHeight());
-		String nd = serverPlayer.getSnakeHead().getDirection();
-		for(SnakeComponent sc : serverPlayer.getSnake()){
+		gf.serverPlayer.getSnakeHead().move(gp.getWidth(), gp.getHeight());
+		String nd = gf.serverPlayer.getSnakeHead().getDirection();
+		for(SnakeComponent sc : gf.serverPlayer.getSnake()){
 			sc.setNextDirection(nd);
 			nd = sc.getDirection();
 			sc.move(gp.getWidth(), gp.getHeight());
 			sc.switchDirection();
 		}
 		
-		if(serverPlayer.getScore()%10 == 0){
+		if(gf.serverPlayer.getScore()%10 == 0){
 			gameSpeed += 5;
 		}
 		
-		if(clientPlayer.getSnakeHead().getIsWin() == true) {
+		if(gf.clientPlayer.getSnakeHead().getIsWin() == true) {
 			isWin = true;
 		}
 	}
 	
 	@Override
 	public void collision() {
-		SnakeHead sh1 = serverPlayer.getSnakeHead();
+		SnakeHead sh1 = gf.serverPlayer.getSnakeHead();
 		point = gp.getCurrentPoint();
 		if(collisionPoint(sh1)){
 			gp.createNewPoint();
-			serverPlayer.addPointToSnake();
-			serverPlayer.addScore(point.getScore());
+			gf.serverPlayer.addPointToSnake();
+			gf.serverPlayer.addScore(point.getScore());
 		}
 		
-		if(collisionSelf(serverPlayer)){
+		if(collisionSelf(gf.serverPlayer)){
 			isWin = true;
 		}
 		
-		SnakeHead sh2 = clientPlayer.getSnakeHead();
+		SnakeHead sh2 = gf.clientPlayer.getSnakeHead();
 		point = gp.getCurrentPoint();
 		if(collisionPoint(sh2)) {
 			gp.createNewPoint();
-			clientPlayer.addPointToSnake();
-			clientPlayer.addScore(point.getScore());
 		}
-		if(collisionSelf(clientPlayer)) {
+		if(collisionSelf(gf.clientPlayer)) {
 			isWin = true;
 		}
 	}
@@ -145,6 +164,5 @@ public class GameLoopServer extends GameLoopAbstract{
 	public boolean getIsWin() {
 		return isWin;
 	}
-
-
+	
 }

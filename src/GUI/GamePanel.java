@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 import Input.Keyboard;
+import NetworkObjects.ExternalIP;
+import NetworkObjects.OwnIPAddress;
 import Points.Point;
 import Snake.SnakeComponent;
 import Snake.SnakeHead;
@@ -18,7 +20,6 @@ public class GamePanel extends SPanel{
 	private static final long serialVersionUID = -2361258666119049509L;
 	
 	/// - Variables - /// 
-	private static final String title = "Multiplayersnake";
 	private int gridSize;
 	private int WIDTH;
 	private int HEIGHT;
@@ -97,7 +98,6 @@ public class GamePanel extends SPanel{
 			g.fillRect(sc.getX(), sc.getY(), sc.getWidth(), sc.getHeight());
 		}
 		
-		
 		Point point = StartPanel.gf.getPoint();
 		g.fillRect(point.getPosX(), point.getPosY(), point.getWidth(), point.getHeight());
 		
@@ -119,10 +119,6 @@ public class GamePanel extends SPanel{
 	
 	public Keyboard getKey(){
 		return key;
-	}
-	
-	public String getTitle(){
-		return title;
 	}
 	
 	public int getGridSize(){

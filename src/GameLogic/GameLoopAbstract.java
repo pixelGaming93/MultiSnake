@@ -12,8 +12,8 @@ public abstract class GameLoopAbstract implements Runnable{
 	protected static boolean isWin;
 	protected GameFrame gf;
 	protected GamePanel gp;
-	protected Player serverPlayer;
-	protected Player clientPlayer;
+//	protected Player serverPlayer;
+//	protected Player clientPlayer;
 	protected Point point;
 	protected double gameSpeed;
 	

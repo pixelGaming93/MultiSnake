@@ -15,6 +15,7 @@ public class Player implements Serializable{
 	protected long score;
 	protected SnakeHead sh;
 	protected ArrayList<SnakeComponent> snake = new ArrayList<SnakeComponent>();
+	public boolean isPortal;
 	
 	/// - Methods - ///
 	
@@ -86,6 +87,10 @@ public class Player implements Serializable{
 		for(SnakeComponent sc : snake){
 			sc.setPortalOn(isPortal);
 		}
+	}
+	
+	public boolean getPortalOn() {
+		return sh.isPortal;
 	}
 	
 	

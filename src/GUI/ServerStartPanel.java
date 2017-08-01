@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+
 /*
  * Panel zum Starten eines Servers
  */
@@ -23,29 +24,26 @@ public class ServerStartPanel extends SPanel{
 	public ServerStartPanel(GameFrame gf, StartPanel sp){
 		this.gf = gf;
 		this.sp = sp;
-		setLayout(new GridLayout(3, 3));
+		setLayout(new GridLayout(3, 2));
 		JLabel nick = new JLabel("Spielername: ");
 		add(nick);
 		JTextField input = new JTextField(15);
+//		JTextField input = new JTextField("Spieler 1");
 		add(input);
-		JButton start = new JButton("Spiel starten");
-		add(start);
 		JLabel port = new JLabel("Port: ");
 		add(port);
 		JTextField input2 = new JTextField(4);
+//		JTextField input2 = new JTextField("2000");
 		add(input2);
 		JLabel freeLabel = new JLabel("");
 		add(freeLabel);
-		JLabel ip = new JLabel("IP-Adresse: ");
-		add(ip);
-		JTextField input3 = new JTextField(15);
-		add(input3);
+		JButton start = new JButton("Spiel starten");
+		add(start);
 		start.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gf.setName(input.getText());
 				gf.setPortAdd(Integer.parseInt(input2.getText()));
-				gf.setIpAdd(input3.getText());
 				sp.waitForOpponent(input.getText());
 			}
 		});

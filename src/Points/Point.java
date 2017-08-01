@@ -61,5 +61,10 @@ public class Point implements Serializable{
 		return score;
 	}
 	
+	@Override
+	public String toString() {
+		return "X: "+getPosX() + " Y: " + getPosY() + " H : " + getHeight() + " W " + getWidth();
+	}
+	
 
 }

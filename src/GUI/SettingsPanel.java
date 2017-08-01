@@ -8,7 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import NetworkObjects.ExternalIP;
+import NetworkObjects.OwnIPAddress;
 
 /*
  * Das Panel listet verschiedene Einstellungen auf, die ein Spieler vor dem Starten ändern kann
@@ -63,11 +67,28 @@ public class SettingsPanel extends SPanel{
 				StartPanel.gf.setGameSize(100);
 			}
 		});
+		
 		gSP.add(small, BorderLayout.WEST);
 		gSP.add(medium, BorderLayout.CENTER);
 		gSP.add(large, BorderLayout.EAST);
 		add(gSP);
-		
+		JPanel ipP = new JPanel();
+		ipP.setLayout(new BorderLayout());
+		JPanel labelP = new JPanel();
+		labelP.setLayout(new GridLayout(2,1));
+		JPanel label2P = new JPanel();
+		label2P.setLayout(new GridLayout(2,1));
+		JLabel externalIPL = new JLabel("Externe IP-Adresse:");
+		JLabel externalIP = new JLabel(ExternalIP.getExternalIP());
+		JLabel lokalIPL = new JLabel("Lokale IP-Adresse:");
+		JLabel lokalIP = new JLabel(OwnIPAddress.getIP());
+		labelP.add(externalIPL);
+		labelP.add(lokalIPL);
+		label2P.add(externalIP);
+		label2P.add(lokalIP);
+		ipP.add(labelP, BorderLayout.WEST);
+		ipP.add(label2P, BorderLayout.EAST);
+		add(ipP);
 		sp.fix(this);
 	}
 	

@@ -2,9 +2,7 @@ package GUI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Date;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -14,9 +12,9 @@ import javax.swing.JMenuItem;
 import GameLogic.GameLoopAbstract;
 import GameLogic.GameLoopClient;
 import GameLogic.GameLoopServer;
-import Player.ClientPlayer;
+import NetworkObjects.ExternalIP;
+import NetworkObjects.OwnIPAddress;
 import Player.Player;
-import Player.ServerPlayer;
 import Points.NormalPoint;
 import Points.Point;
 import Snake.Direction;
@@ -26,19 +24,20 @@ public class GameFrame extends JFrame{
 	public static final long serialVersionUID = -2363170020622765848L;
 	
 	/// - Variables - ///
-	public String title = "Multiplayersnake";
+	public String title = "Multiplayersnake "+OwnIPAddress.getIP();
 	public int componentSize = 5;
 	public Point point;
 	public Thread t;
 	public GameLoopAbstract gl;
+	
 
 	// - Settings - // 
 	public boolean isPortal = false;
 	public int gameSize = 60;
 	
 	// - Player - //
-	public ServerPlayer serverPlayer;
-	public ClientPlayer clientPlayer;
+	public Player serverPlayer;
+	public Player clientPlayer;
 	
 	// - Server - //
 	public int portAdd;
@@ -53,6 +52,8 @@ public class GameFrame extends JFrame{
 		JMenuBar jmb = new JMenuBar();
 		setJMenuBar(jmb);
 		addSubmenu(jmb);
+		
+		isPortal = true;
 		
 		storePanel = new StartPanel(300,200,this);
 		add(storePanel);
@@ -126,22 +127,22 @@ public class GameFrame extends JFrame{
 	
 	// - Initial - //
 	public void initialServerPlayer(String name){
-		serverPlayer = new ServerPlayer(componentSize, name);
+		serverPlayer = new Player(componentSize, name);
 		serverPlayer.setPortalOn(isPortal);
 	}
 	
 	public void initialClientPlayer(String name){
-		clientPlayer = new ClientPlayer(componentSize, name, 240, 240, Direction.LEFT);
+		clientPlayer = new Player(componentSize, name, 240, 240, Direction.LEFT);
 		clientPlayer.setPortalOn(isPortal);
 	}
 	
 	public void initialServerOpponent(String name){
-		serverPlayer = new ServerPlayer(componentSize, name);
+		serverPlayer = new Player(componentSize, name);
 		serverPlayer.setPortalOn(isPortal);
 	}
 	
 	public void initialClientOpponent(String name){
-		clientPlayer = new ClientPlayer(componentSize, name, 240, 240, Direction.LEFT);
+		clientPlayer = new Player(componentSize, name, 240, 240, Direction.LEFT);
 		clientPlayer.setPortalOn(isPortal);
 	}
 	

@@ -23,7 +23,8 @@ public abstract class SnakeComponent implements Serializable{
 	public boolean isPortal = false;
 	
 	/// - Methods - ///
-	public void move(int width, int height){
+	
+	public void move(int width, int height) {
 		/*
 		 * Steuerung der Schlange, wie bewegt Sie sich
 		 * Verschiedene Einstellungen können über Parameter ein oder ausgeschaltet werden
@@ -127,7 +128,6 @@ public abstract class SnakeComponent implements Serializable{
 	}
 	
 	
-	
 	public void goUP(){
 		/*
 		 * Setzt die Directon der Schlangen-Komponente auf Up. Somit bewegt sich die Schlange nach oben.
@@ -217,6 +217,10 @@ public abstract class SnakeComponent implements Serializable{
 	
 		this.isPortal = isPortal;
 	
+	}
+	
+	public boolean getPortalOn() {
+		return isPortal;
 	}
 	
 	public abstract void setIsWin(boolean isWin);
