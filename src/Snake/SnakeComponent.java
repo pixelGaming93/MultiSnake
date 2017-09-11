@@ -3,6 +3,8 @@ package Snake;
 import java.awt.Rectangle;
 import java.io.Serializable;
 
+import GUI.GameFrame;
+
 /*
  * Eine Oberklasse für sowohl Körper als auch Kopf der Schlange.
  */
@@ -36,7 +38,7 @@ public abstract class SnakeComponent implements Serializable{
 		 */
 		if(direction.equals(Direction.UP)){
 			
-			if(isPortal){
+			if(GameFrame.isPortal){
 				if(posY - speed < 0){
 					
 					posY = height;
@@ -59,7 +61,7 @@ public abstract class SnakeComponent implements Serializable{
 			}
 		}
 		if(direction.equals(Direction.DOWN)){
-			if(isPortal){
+			if(GameFrame.isPortal){
 				if(posY + speed > height){
 					
 					posY = 0;
@@ -82,7 +84,7 @@ public abstract class SnakeComponent implements Serializable{
 			}
 		}
 		if(direction.equals(Direction.RIGHT)){
-			if(isPortal){
+			if(GameFrame.isPortal){
 				if(posX + speed > width){
 				
 					posX = 0;
@@ -105,7 +107,7 @@ public abstract class SnakeComponent implements Serializable{
 			}
 		}
 		if(direction.equals(Direction.LEFT)){
-			if(isPortal){
+			if(GameFrame.isPortal){
 				if(posX - speed < 0){
 				
 					posX = width;

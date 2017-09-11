@@ -28,13 +28,13 @@ public class OwnIPAddress {
 		return ip;
 	}
 	
-	public static String getOwnerHostName() {
-		try {
-			return InetAddress.getLocalHost().getHostName();
-		}catch(UnknownHostException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+//	public static String getOwnerHostName() {
+//		try {
+//			return InetAddress.getLocalHost().getHostName();
+//		}catch(UnknownHostException e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 
 }

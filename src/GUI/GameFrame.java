@@ -11,11 +11,15 @@ import javax.swing.JMenuItem;
 import GameLogic.GameLoopAbstract;
 import GameLogic.GameLoopClient;
 import GameLogic.GameLoopServer;
+import GameLogic.GameLoopSingle;
 import NetworkObjects.OwnIPAddress;
+import Player.KI;
 import Player.Player;
 import Points.NormalPoint;
 import Points.Point;
+import Shoots.Shoot;
 import Snake.Direction;
+import Snake.SnakeComponent;
 
 public class GameFrame extends JFrame{
 	
@@ -28,14 +32,24 @@ public class GameFrame extends JFrame{
 	public Thread t;
 	public GameLoopAbstract gl;
 	
-
 	// - Settings - // 
-	public boolean isPortal = false;
-	public int gameSize = 60;
+	public static boolean isPortal = false;
+	public static int gameSize = 60;
+	
+	// - GameMode - //
+	public static boolean mpMode = false;
+	public static boolean spMode = false;
 	
 	// - Player - //
+	public static Player singlePlayer;
 	public Player serverPlayer;
 	public Player clientPlayer;
+	
+	// - KI - //
+	public static KI ki;
+	
+	// - Shoots - //
+	public static Shoot singlePlayerS = null;
 	
 	// - Server - //
 	public int portAdd;
@@ -51,8 +65,6 @@ public class GameFrame extends JFrame{
 		setJMenuBar(jmb);
 		addSubmenu(jmb);
 		
-		isPortal = true;
-		
 		storePanel = new StartPanel(300,200,this);
 		add(storePanel);
 		
@@ -67,10 +79,22 @@ public class GameFrame extends JFrame{
 		 * Initialisiert einen Spieler und einen Punkt
 		 * erzeugt einen neuen Thread
 		 */
-		initialServerPlayer(name);
+		initialSinglePlayer(name);
 		initialPoint();
-		
-		t = new Thread(gl = new GameLoopServer(storePanel, serverPlayer, point, this));
+		t = new Thread(gl = new GameLoopSingle(storePanel, serverPlayer, point, this));
+		t.start();
+	}
+	
+	public synchronized void startKIGame(String name, int difficult) {
+		/*
+		 * Startet das KI-Spiel 
+		 * Initialisiert einen Spieler, eine KI und einen Punkt
+		 * erzeugt einen neuen Thread
+		 */
+		initialSinglePlayer(name);
+		initialKI(difficult);
+		initialPoint();
+		t = new Thread(gl = new GameLoopSingle(storePanel, singlePlayer, point, this));
 		t.start();
 	}
 	
@@ -101,7 +125,7 @@ public class GameFrame extends JFrame{
 	
 	public synchronized void stopGame(){
 		/*
-		 * Stopt das Spiel
+	 n	 * Stopt das Spiel
 		 */
 		GameLoopAbstract.setIsWin(true);
 	}
@@ -120,10 +144,15 @@ public class GameFrame extends JFrame{
 		 */
 		pack();
 		setLocationRelativeTo(null);
-		repaint();
+		storePanel.repaint();
 	}
 	
 	// - Initial - //
+	public void initialSinglePlayer(String name) {
+		singlePlayer = new Player(componentSize, name);
+		singlePlayer.setPortalOn(isPortal);
+	}
+	
 	public void initialServerPlayer(String name){
 		serverPlayer = new Player(componentSize, name);
 		serverPlayer.setPortalOn(isPortal);
@@ -144,12 +173,21 @@ public class GameFrame extends JFrame{
 		clientPlayer.setPortalOn(isPortal);
 	}
 	
+	public void initialKI(int difficult) {
+		ki = new KI(componentSize, difficult, 240, 240, Direction.LEFT);
+		ki.setPortalOn(isPortal);
+	}
+	
 	public void initialPoint(){
 		point = new NormalPoint(((int)(Math.random()*((GamePanel)storePanel).getGridSize()))*componentSize,((int)(Math.random()*((GamePanel)storePanel).getGridSize()))*componentSize);
 	}
 	
 	public void initialPoint(int x, int y) {
 		point = new NormalPoint(x, y);
+	}
+	
+	public static void initialShoot(int x, int y, String direction, SnakeComponent sc, int componentSize) {
+		singlePlayerS = new Shoot(x, y, direction, sc, componentSize, gameSize*componentSize, gameSize*componentSize);
 	}
 	
 	// - create Frame - //
@@ -171,7 +209,7 @@ public class GameFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				stopGame();
-				getContentPane().remove(0);
+				getContentPane().removeAll();
 				storePanel = new StartPanel(300,100);
 				add(storePanel);
 				align();
@@ -180,7 +218,6 @@ public class GameFrame extends JFrame{
 		JMOption.add(JMIBack);
 		//-----
 	}
-	
 
 	/// - Getter & Setter - ///
 	public String getTitle(){
@@ -226,7 +263,7 @@ public class GameFrame extends JFrame{
 	
 	// - Settings - // 
 	public void setGameSize(int gameSize){
-		this.gameSize = gameSize;
+		GameFrame.gameSize = gameSize;
 	}
 
 	public void setPortalOn(boolean portal){
@@ -238,6 +275,10 @@ public class GameFrame extends JFrame{
 	}
 	
 	// - Player - // 
+	public static Player getSinglePlayer() {
+		return singlePlayer;
+	}
+	
 	public Player getServerPlayer(){
 		return serverPlayer;
 	}
@@ -265,6 +306,9 @@ public class GameFrame extends JFrame{
 	public void setClientPlayer(String name){
 		clientPlayer.setName(name);
 	}
-	
+
+	public Shoot getShoot() {
+		return singlePlayerS;
+	}
 	
 }

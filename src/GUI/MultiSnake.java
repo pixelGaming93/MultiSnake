@@ -1,9 +1,15 @@
 package GUI;
 
+import java.util.logging.Logger;
+
 /*
  * Startet das Spiel
  */
 public class MultiSnake {
+	/// - Variables - ///
+	
+
+	
 	/// - Methods - ///
 	
 	// - Main - // 
@@ -11,6 +17,8 @@ public class MultiSnake {
 		GameFrame gf = new GameFrame();
 		gf.align();
 		gf.setVisible(true);
+		
+		
 	}
 
 }

@@ -11,10 +11,10 @@ import Snake.SnakeHead;
 public class Player implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	protected String name;
-	protected long score;
-	protected SnakeHead sh;
-	protected ArrayList<SnakeComponent> snake = new ArrayList<SnakeComponent>();
+	public String name;
+	public long score;
+	public SnakeHead sh;
+	public ArrayList<SnakeComponent> snake = new ArrayList<SnakeComponent>();
 	public boolean isPortal;
 	
 	/// - Methods - ///
@@ -51,6 +51,13 @@ public class Player implements Serializable{
 		for(int i = 0; i < 4; i++){
 			snake.add(new SnakeBody(snake.get(i)));
 		}
+	}
+	
+	public void hit() {
+		score -= 1;
+		ArrayList<SnakeComponent> store = snake;
+		store.remove(snake.size()-1);
+		snake = store;
 	}
 	
 	// - Getter & Setter - //

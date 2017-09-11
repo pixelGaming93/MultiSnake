@@ -2,8 +2,10 @@ package GameLogic;
 
 import GUI.GameFrame;
 import GUI.GamePanel;
+import GUI.StartPanel;
 import Player.Player;
 import Points.Point;
+import Shoots.Shoot;
 import Snake.SnakeComponent;
 import Snake.SnakeHead;
 
@@ -12,13 +14,9 @@ public abstract class GameLoopAbstract implements Runnable{
 	protected static boolean isWin;
 	protected GameFrame gf;
 	protected GamePanel gp;
-//	protected Player serverPlayer;
-//	protected Player clientPlayer;
 	protected Point point;
 	protected double gameSpeed;
 	
-	
-
 	@Override
 	public abstract void run();
 	
@@ -33,7 +31,6 @@ public abstract class GameLoopAbstract implements Runnable{
 		
 		abstractUpdate();
 		collision();
-		
 	}
 	
 	public abstract void move();
@@ -60,4 +57,33 @@ public abstract class GameLoopAbstract implements Runnable{
 		}
 		return false;
 	}
+	
+	protected boolean coolisionOtherSnake(Player p1, Player p2) {
+		boolean r;
+		for(SnakeComponent sc : p2.getSnake()) {
+			r = p1.getSnakeHead().getBounds().intersects(sc.getBounds());
+			if(r) return r;
+		}
+		return false;
+	}
+	
+	protected boolean collisionOtherSnakeWithShoot(Shoot s, Player p) {
+		boolean r;
+		for(SnakeComponent sc : p.getSnake()) {
+			r = s.getBounds().intersects(sc.getBounds());
+			if(r) return r;
+		}
+		return false;
+	}
+	
+	public void backToStartPanel() {
+		gf.stopGame();
+		gf.getContentPane().removeAll();
+		gf.storePanel = new StartPanel(300,100);
+		gf.add(gf.storePanel);
+		gf.align();
+		closeStreams();
+	}
+	
+	public abstract void closeStreams();
 }

@@ -1,13 +1,20 @@
 package GameLogic;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.swing.JOptionPane;
+
 import GUI.GameFrame;
 import GUI.GamePanel;
+import GUI.MultiSnake;
 import GUI.SPanel;
+import Logging.SnakeLogger;
 import NetworkObjects.PlayerPointDTO;
 import Player.Player;
 import Points.Point;
@@ -20,6 +27,8 @@ public class GameLoopServer extends GameLoopAbstract{
 	/// - Variables - ///
 	public static ServerSocket server;
 	public static Socket client;
+	public static ObjectOutputStream outputDTO;
+	public static ObjectInputStream inputDTO;
 	
 	public GameLoopServer(SPanel gp,  Player serverPlayer, Point point, GameFrame gf){
 		isWin = false;
@@ -47,11 +56,12 @@ public class GameLoopServer extends GameLoopAbstract{
 			
 			
 			if(client.isConnected()){
-				ObjectInputStream inputDTO = new ObjectInputStream(client.getInputStream());
-				ObjectOutputStream outputDTO = new ObjectOutputStream(client.getOutputStream());
+				inputDTO = new ObjectInputStream(client.getInputStream());
+				outputDTO = new ObjectOutputStream(client.getOutputStream());
 				
 				PlayerPointDTO output = new PlayerPointDTO();
 				PlayerPointDTO input = new PlayerPointDTO();
+				
 				
 				gf.clientPlayer = ((PlayerPointDTO)inputDTO.readObject()).player;
 				gf.clientPlayer.setPortalOn(gf.getPortalOn());
@@ -80,11 +90,9 @@ public class GameLoopServer extends GameLoopAbstract{
 					input = (PlayerPointDTO) inputDTO.readObject();
 					gf.clientPlayer = input.player;
 					
-					System.out.println("1. Ausgabe : "+ gf.serverPlayer.toString());
 					output.player = gf.serverPlayer;
 					output.point = gf.point;
 					
-					System.out.println("2. Ausgabe : " + output.player.toString());
 					outputDTO.writeObject(output);
 					outputDTO.flush();
 					outputDTO.reset();
@@ -100,11 +108,13 @@ public class GameLoopServer extends GameLoopAbstract{
 					}
 				}
 				
-				//Wenn ein Spieler boolischen Variable false dann verloren und lost screen
-				gp.showLostScreen();
 			}
+		}catch (EOFException ee) {
+			JOptionPane.showMessageDialog(gf, "Die Verbindung wurde unerwartet beendet!","Error", JOptionPane.ERROR_MESSAGE);
+			backToStartPanel();
 		}catch(Exception e){
-			e.printStackTrace();
+			SnakeLogger sl = new SnakeLogger();
+			sl.log.severe(sl.getException(e.getClass().getName(), e.getMessage(), e.getStackTrace()));
 		}
 	}
 
@@ -149,6 +159,8 @@ public class GameLoopServer extends GameLoopAbstract{
 		
 		if(collisionSelf(gf.serverPlayer)){
 			isWin = true;
+			//Wenn ein Spieler boolischen Variable false dann verloren und lost screen
+			gp.showLostScreen();
 		}
 		
 		SnakeHead sh2 = gf.clientPlayer.getSnakeHead();
@@ -158,12 +170,33 @@ public class GameLoopServer extends GameLoopAbstract{
 		}
 		if(collisionSelf(gf.clientPlayer)) {
 			isWin = true;
+			gp.showWinScreen();
+		}
+		if(coolisionOtherSnake(gf.serverPlayer, gf.clientPlayer)) {
+			isWin = true;
+			//Wenn ein Spieler boolischen Variable false dann verloren und lost screen
+			gp.showLostScreen();
+		}
+		if(coolisionOtherSnake(gf.clientPlayer, gf.serverPlayer)) {
+			isWin = true;
+			gp.showWinScreen();
 		}
 	}
 
 	@Override
 	public boolean getIsWin() {
 		return isWin;
+	}
+	
+	@Override
+	public void closeStreams() {
+		try {
+			outputDTO.close();
+			inputDTO.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

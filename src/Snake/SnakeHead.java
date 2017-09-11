@@ -2,6 +2,8 @@ package Snake;
 
 import java.io.Serializable;
 
+import GUI.GameFrame;
+
 /*
  * Die Klasse stellt den Kopf der Schlage dar.
  */
@@ -30,6 +32,10 @@ public class SnakeHead extends SnakeComponent implements Serializable{
 		height = componentSize;
 		this.direction = direction;
 		speed = width;
+	}
+	
+	public void shoot() {
+		GameFrame.initialShoot(posX, posY, direction, this, width);
 	}
 
 	@Override

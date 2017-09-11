@@ -1,13 +1,18 @@
 package GameLogic;
 
+import java.io.EOFException;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetSocketAddress;
+import java.net.ConnectException;
 import java.net.Socket;
+
+import javax.swing.JOptionPane;
 
 import GUI.GameFrame;
 import GUI.GamePanel;
 import GUI.SPanel;
+import Logging.SnakeLogger;
 import NetworkObjects.PlayerPointDTO;
 import Player.Player;
 import Points.Point;
@@ -19,7 +24,8 @@ public class GameLoopClient extends GameLoopAbstract{
 	
 	/// - Variables - /// 
 	public static Socket client;
-	public static InetSocketAddress server;
+	public static ObjectOutputStream outputDTO;
+	public static ObjectInputStream inputDTO;
 	
 	public GameLoopClient(SPanel gp, Player clientPlayer, Point point, GameFrame gf){
 		isWin = false;
@@ -49,8 +55,8 @@ public class GameLoopClient extends GameLoopAbstract{
 		
 		if(client.isConnected()){
 			
-			ObjectOutputStream outputDTO = new ObjectOutputStream(client.getOutputStream());
-			ObjectInputStream inputDTO = new ObjectInputStream(client.getInputStream());
+			outputDTO = new ObjectOutputStream(client.getOutputStream());
+			inputDTO = new ObjectInputStream(client.getInputStream());
 			
 			PlayerPointDTO output = new PlayerPointDTO();
 			PlayerPointDTO input;
@@ -66,7 +72,7 @@ public class GameLoopClient extends GameLoopAbstract{
 			point = input.point;
 			gf.point = point;
 
-			while(true){
+			while(!isWin){
 				long now = System.nanoTime();
 				delta += (now-lastTime) / ns;
 				lastTime = now;
@@ -100,8 +106,19 @@ public class GameLoopClient extends GameLoopAbstract{
 			}
 			//Wenn ein Spieler boolischen Variable false dann verloren und lost screen
 		}
-		}catch (Exception e) {
-			e.printStackTrace();
+		
+		}catch (EOFException ee) {
+			JOptionPane.showMessageDialog(gf, "Die Verbindung wurde unerwartet beendet!","Error", JOptionPane.ERROR_MESSAGE);
+			backToStartPanel();
+		}
+		
+		catch (ConnectException ce) {
+			JOptionPane.showMessageDialog(gf, "Die Verbindung ist Fehlgeschlagen! Bitte versuchen Sie es erneut.", "Error", JOptionPane.ERROR_MESSAGE);
+			backToStartPanel();
+		}
+		catch (Exception e) {
+			SnakeLogger sl = new SnakeLogger();
+			sl.log.severe(sl.getException(e.getClass().getName(), e.getMessage(), e.getStackTrace()));
 		}
 	}
 
@@ -137,11 +154,33 @@ public class GameLoopClient extends GameLoopAbstract{
 			gf.clientPlayer.addPointToSnake();
 			gf.clientPlayer.addScore(point.getScore());
 		}
+		System.out.println("hier bin ich drin");
+		if(coolisionOtherSnake(gf.serverPlayer, gf.clientPlayer)) {
+			System.out.println("jetzt hab ich gewonnen");
+			gp.showWinScreen();
+		}
+		if(coolisionOtherSnake(gf.clientPlayer, gf.serverPlayer)) {
+			System.out.println("jetzt hab ich verloren");
+			gp.showLostScreen();
+		}
+		
 	}
 
 	@Override
 	public boolean getIsWin() {
 		return isWin;
+	}
+	
+	@Override
+	public void closeStreams() {
+		try {
+			outputDTO.close();
+			inputDTO.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

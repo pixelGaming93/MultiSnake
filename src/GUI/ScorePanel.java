@@ -27,9 +27,10 @@ public class ScorePanel extends SPanel{
 		super.paintComponent(g);
 		setBackground(Color.BLACK);
 		g.setColor(Color.WHITE);
-		g.drawString(StartPanel.gf.getServerPlayer().getName() + ": " + StartPanel.gf.getServerPlayer().getScore(), 10, 10);
-		g.drawString(StartPanel.gf.getClientPlayer().getName() + ": " + StartPanel.gf.getClientPlayer().getScore(), 200, 10);
 		
-		
+		if(StartPanel.isMultiPlayer) {
+			g.drawString(StartPanel.gf.getClientPlayer().getName() + ": " + StartPanel.gf.getClientPlayer().getScore(), 200, 10);
+		}
+		g.drawString(StartPanel.gf.getSinglePlayer().getName() + " : " + StartPanel.gf.getSinglePlayer().getScore(), 200, 10);
 	}
 }

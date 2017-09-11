@@ -1,0 +1,15 @@
+SEVERE 09 Aug 2017 03:58 java.net.ConnectException
+Connection refused
+java.net.PlainSocketImpl.socketConnect(Native Method)
+java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+java.net.Socket.connect(Socket.java:589)
+java.net.Socket.connect(Socket.java:538)
+java.net.Socket.<init>(Socket.java:434)
+java.net.Socket.<init>(Socket.java:211)
+GameLogic.GameLoopClient.run(GameLoopClient.java:47)
+java.lang.Thread.run(Thread.java:745)
+
+

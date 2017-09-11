@@ -34,7 +34,14 @@ public class LostPanel extends SPanel{
 		restart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sp.startGame();
+				
+				if(GameFrame.mpMode) {
+					sp.startMGame();
+				}
+				
+				if(GameFrame.spMode) {
+					sp.startSGame();
+				}
 			}
 		});
 		JButton back = new JButton("Zurück ins Menü");
@@ -42,6 +49,8 @@ public class LostPanel extends SPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				StartPanel.gf.getContentPane().remove(0);
+				GameFrame.mpMode = false;
+				GameFrame.spMode = false;
 				StartPanel.gf.setStorePanel(new StartPanel(300,100));
 				StartPanel.gf.add(StartPanel.gf.getStorePanel());
 				StartPanel.gf.align();

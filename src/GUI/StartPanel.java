@@ -11,7 +11,7 @@ import javax.swing.JPanel;
  
 /*
  * Erstellt das Panel für das Start-Menü
- * H
+ * 
  */
 public class StartPanel extends SPanel{
 
@@ -21,7 +21,7 @@ public class StartPanel extends SPanel{
 	protected int WIDTH;
 	protected int HEIGHT;
 	protected static GameFrame gf;
-	private boolean isMultiPlayer = false;
+	protected static boolean isMultiPlayer = false;
 	
 	/// - Methods - ///
 	// - Constructor - //
@@ -44,7 +44,7 @@ public class StartPanel extends SPanel{
 	
 	public void createStartPanel(){
 		JPanel bPanel = new JPanel();
-		bPanel.setLayout(new GridLayout(5, 1));
+		bPanel.setLayout(new GridLayout(6, 1));
 		// Startet einen Server und wartet auf einen Client um das Multiplayer-Spiel zu spielen
 		JButton serverStart = new JButton("Server starten");
 		serverStart.addActionListener(new ActionListener() {
@@ -52,6 +52,7 @@ public class StartPanel extends SPanel{
 			public void actionPerformed(ActionEvent e) {
 				isMultiPlayer = true;
 				gf.getContentPane().remove(0);
+				GameFrame.mpMode = true;
 				gf.setStorePanel(new ServerStartPanel(gf,StartPanel.this));
 				gf.add(gf.getStorePanel());
 				gf.pack();
@@ -63,8 +64,9 @@ public class StartPanel extends SPanel{
 		joinServer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				isMultiPlayer = true;
+				isMultiPlayer = true; 
 				gf.getContentPane().remove(0);
+				GameFrame.mpMode = true;
 				gf.setStorePanel(new ServerConnectPanel(gf,StartPanel.this));
 				gf.add(gf.getStorePanel());
 				gf.pack();
@@ -76,13 +78,28 @@ public class StartPanel extends SPanel{
 		singelPlayer.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				isMultiPlayer = false;
 				gf.getContentPane().remove(0);
+				GameFrame.spMode = true;
 				gf.setStorePanel(new NicknamePanel(StartPanel.this));
 				gf.add(gf.getStorePanel());
 				gf.pack();
 			}
 		});
 		bPanel.add(singelPlayer);
+		//Startet das Spiel vs KI
+		JButton vsKI = new JButton("vs. KI");
+		vsKI.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gf.getContentPane().remove(0);
+				GameFrame.spMode = true;
+				gf.setStorePanel(new KIPanel(StartPanel.this));
+				gf.add(gf.getStorePanel());
+				gf.pack();
+			}
+		});
+		bPanel.add(vsKI);
 		//Öffnet das Option's-Fenster um Einstellungen zu ändern
 		JButton settings = new JButton("Spiel-Optionen");
 		settings.addActionListener(new ActionListener() {
@@ -115,11 +132,23 @@ public class StartPanel extends SPanel{
 		gf.startGame(name);
 	}
 	
-	public void startGame(){
+	public void startKIGame(String name, int difficult) {
+		/*
+		 * Nimmt Grundeinstellungen vor und startet dann den Thread für das KI-Spiel
+		 */
+		prepareGame();
+		gf.startKIGame(name, difficult);
+	}
+	
+	public void startMGame(){
 		/*
 		 * Startet das Spiel ohne vorher Grundeinstellungen zu ändern. Wichtig um ein Verlorenes Spiel neu zu starten.
 		 */
 		startGame(gf.getServerPlayer().getName());
+	}
+	
+	public void startSGame() {
+		startGame(gf.getSinglePlayer().getName());
 	}
 
 	public void waitForOpponent(String name){

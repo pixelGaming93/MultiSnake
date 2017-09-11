@@ -63,6 +63,14 @@ public class GamePanel extends SPanel{
 		StartPanel.gf.align();
 	}
 	
+	public void showWinScreen() {
+		StartPanel.gf.getContentPane().remove(0);
+		StartPanel.gf.getContentPane().remove(0);
+		SPanel wp = new WinPanel(WIDTH,HEIGHT,sp);
+		StartPanel.gf.add(wp);
+		StartPanel.gf.align();
+	}
+	
 	public void paintScore(){
 		/*
 		 * Ruft die Paint Methode auf, um die Score-Anzahl anzuzeigen
@@ -80,24 +88,51 @@ public class GamePanel extends SPanel{
 		setBackground(color);
 		
 		
-		// - Player1 - //
-		SnakeHead sh1 = StartPanel.gf.getServerPlayer().getSnakeHead();
-		ArrayList<SnakeComponent> s1 = StartPanel.gf.getServerPlayer().getSnake();
-		g.fillRect(sh1.getX(), sh1.getY(), sh1.getWidth(), sh1.getHeight());
-		for(SnakeComponent sc : s1){
-			g.fillRect(sc.getX(), sc.getY(), sc.getWidth(), sc.getHeight());
+		
+		if(StartPanel.isMultiPlayer) {
+			// - Player1 - //
+			SnakeHead sh1 = StartPanel.gf.getServerPlayer().getSnakeHead();
+			ArrayList<SnakeComponent> s1 = StartPanel.gf.getServerPlayer().getSnake();
+			g.fillRect(sh1.getX(), sh1.getY(), sh1.getWidth(), sh1.getHeight());
+			for(SnakeComponent sc : s1){
+				g.fillRect(sc.getX(), sc.getY(), sc.getWidth(), sc.getHeight());
+			}
+
+			// - Player2 - //
+			SnakeHead sh2 = StartPanel.gf.getClientPlayer().getSnakeHead();
+			ArrayList<SnakeComponent> s2 = StartPanel.gf.getClientPlayer().getSnake();
+			g.fillRect(sh2.getX(),  sh2.getY(), sh2.getWidth(), sh2.getHeight());
+			for(SnakeComponent sc : s2) {
+				g.fillRect(sc.getX(), sc.getY(), sc.getWidth(), sc.getHeight());
+			}
+			
+			Point point = StartPanel.gf.getPoint();
+			g.fillRect(point.getPosX(), point.getPosY(), point.getWidth(), point.getHeight());
+		}else {
+			// - SinglePlayer - //
+			SnakeHead sh = StartPanel.gf.getSinglePlayer().getSnakeHead();
+			ArrayList<SnakeComponent> s = StartPanel.gf.getSinglePlayer().getSnake();
+			g.fillRect(sh.getX(), sh.getY(), sh.getWidth(), sh.getHeight());
+			for(SnakeComponent sc : s) {
+				g.fillRect(sc.getX(), sc.getY(), sc.getWidth(), sc.getHeight());
+			}
+			
+			Point point = StartPanel.gf.getPoint();
+			g.fillRect(point.getPosX(), point.getPosY(), point.getWidth(), point.getHeight());
 		}
 		
-		// - Player2 - //
-		SnakeHead sh2 = StartPanel.gf.getClientPlayer().getSnakeHead();
-		ArrayList<SnakeComponent> s2 = StartPanel.gf.getClientPlayer().getSnake();
-		g.fillRect(sh2.getX(),  sh2.getY(), sh2.getWidth(), sh2.getHeight());
-		for(SnakeComponent sc : s2) {
-			g.fillRect(sc.getX(), sc.getY(), sc.getWidth(), sc.getHeight());
+		if(GameFrame.singlePlayerS != null) {
+			g.fillRect(GameFrame.singlePlayerS.getPosX(), GameFrame.singlePlayerS.getPosY(), GameFrame.singlePlayerS.getWidth(), GameFrame.singlePlayerS.getHeight());
 		}
 		
-		Point point = StartPanel.gf.getPoint();
-		g.fillRect(point.getPosX(), point.getPosY(), point.getWidth(), point.getHeight());
+		if(GameFrame.ki != null) {
+			SnakeHead shKI = GameFrame.ki.getSnakeHead();
+			ArrayList<SnakeComponent> sKI = GameFrame.ki.getSnake();
+			g.fillRect(shKI.getX(), shKI.getY(), shKI.getWidth(), shKI.getHeight());
+			for(SnakeComponent sc : sKI) {
+				g.fillRect(sc.getX(), sc.getY(), sc.getWidth(), sc.getHeight());
+			}
+		}
 		
 	}
 	
